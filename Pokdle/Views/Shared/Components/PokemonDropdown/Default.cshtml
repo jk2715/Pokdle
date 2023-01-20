@@ -1,0 +1,10 @@
+﻿@using PokeApiNet
+@model Pokdle.Models.ComponentModels.PokemonSearchComponentModel
+@{
+    var pokemon = Model == null ? new List<Pokemon>() : Model.Pokemon;
+}
+
+@foreach (var poke in pokemon)
+{
+    <li><div class="container"><div class="row"><div class="dropdown-item"><img class="sprite-small"  onclick="@($"SetPokemon('{poke.Id}', '{poke.Name}');")" src="@poke.Sprites.FrontDefault"><a class="dropdown-item-text" id="pokemon-@poke.Id" href="#" onclick="@($"SetPokemon('{poke.Id}', '{poke.Name}');")">#@poke.Id - @poke.Name</a><div></div></div></div></div></li>
+}

@@ -1,0 +1,184 @@
+﻿@using PokeAPI
+@model Pokdle.Models.PageModels.MainPageModel
+@{
+    List<string> generations = new List<string>()
+    {
+        "All", "I", "II", "III", "IV", "V", "VI", "VII", "VIII"
+    };
+}
+    <div class="text-center card mainCard">
+        <h1 class="display-4 pokeFont mainTitle">Pokdle</h1>
+        <br />
+        <h6 class="pokeFont pokeText">Another Pokemon Wordle Clone</h6>
+    <br />
+    @if (!Model.IsSuccess)
+    {
+    <div id="cluesDiv">
+            <h3 class="textcolor">Clues</h3>
+            @if(Model.PokemonGuesses.Guesses.Count < 3)
+            {
+                <h6 class="textcolor" id="triesLeft">@(3 - Model.PokemonGuesses.Guesses.Count) tries left to unlock this clue</h6>
+            }           
+        <button class="btn pokeFont pokeText @(Model.PokemonGuesses.Guesses.Count >= 3 ? "btn-primary" : "")" id="cryBtn" @(Model.PokemonGuesses.Guesses.Count >= 3 ? "" : "disabled") onclick="playCry('@Model.PokemonName')">
+            <img class="clueSize" src="~/resources/soundwave.png"/>
+            <br/>
+            Cry
+        </button>
+    </div>
+    
+        <div class="row d-flex justify-content-center" id="pokeSearchDiv">
+         <div class="form-group">
+            <label for="searchPokemon">Try it out!</label>
+                <div class="dropdown">
+                    <div class="textcolor">Generation</div>
+                    <button class="btn dropdown-toggle" type="button" id="GenSelectDropdownButton" aria-expanded="false">
+                        All
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-light" id="GenSelectDropdown" aria-labelledby="GenSelectDropdownButton">
+                        @foreach(string gen in generations)
+                        {
+                            <li><a class="dropdown-item" style="text-align:center" id="generation-@gen" href="#" onclick="SetGeneration('@gen')">@gen</a></li>
+                        }
+                    </ul>
+                </div>
+            
+            <div class="dropdown col-xs-3">
+                    <input class="btn btn-secondary-dropdown form-control" type="text" onkeyup="pokeSearch()" id="searchPokemon" aria-expanded="false" placeholder="Guess a Pokemon" value="" />
+                <ul class="dropdown-menu dropdown-menu-light pokemonDropdown" id="SearchPokemonDropdownList" aria-labelledby="searchPokemon">
+                    @await Component.InvokeAsync("PokemonDropdown", Model.PokemonResults)
+                </ul>       
+            <input type="hidden" name="selectedPokemon" id="selectedPokemonDropdown" value="0" />
+           </div>
+        </div>
+        </div>
+  <div id="submitDiv">
+      <button type="submit" class="btn btn-primary" id="submitGuess" onclick="SubmitGuess()">Submit</button>
+  </div>
+  
+   }
+   <br/>
+   <form action="Home/@(!Model.IsRandomMode ? "RandomMode": "DailyMode")" method="Get">
+       <button type="submit" class="btn btn-warning" id="changeMode">@(!Model.IsRandomMode ? "Try a Random Pokemon" : "Pokemon of the Day")</button>
+   </form>
+<br />
+</div>
+<div id="guessDiv">
+    <table class="table tableGuesses">
+        <thead class="columnHeader">
+            <tr class="pokeFont pokeText tableHead">    
+                <th scope="col">
+                    <div class="tooltip1">
+                        Pokemon
+                        <span class="tooltiptext1 tooltip-top1">The Pokemon's official artwork</span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Type
+                        <span class="tooltiptext1 tooltip-top1">The Pokemon's typing.</span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Abilities
+                        <span class="tooltiptext1 tooltip-top1">The Pokemon's abilities. Includes Hidden Abilities </span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Top Two Base Stats
+                        <span class="tooltiptext1 tooltip-top1">The Pokemon's two highest base stats.</span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Lowest Two Base Stats
+                        <span class="tooltiptext1 tooltip-top1">The Pokemon's two lowest base stats.</span>
+                    </div>    
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Evolution Stage
+                        <span class="tooltiptext1 tooltip-top1">The stage of evolution the Pokemon is in.</span>
+                    </div>            
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Evolution Line Total
+                        <span class="tooltiptext1 tooltip-top1">The total number of Pokemon in the Pokemon's evolutionary line, including the first stage and branching evolutions.</span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="tooltip1">
+                        Generation
+                        <span class="tooltiptext1 tooltip-top1">The Pokemon's debut generation.</span>
+                    </div>
+                </th>
+           </tr>
+        </thead>
+        <tbody id="guessTbody" class="pokeFont pokeText">
+            @await Component.InvokeAsync("PokemonGuess", Model.PokemonGuesses)
+        </tbody>
+    </table>
+</div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="card">
+                <img class="card-img-top clueSize" src="~/resources/greenblock.png" alt="Card image cap">
+                <div class="card-body pokeFont pokeText">
+                    Correct
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="card">
+                <img class="card-img-top clueSize" src="~/resources/yellowblock.png" alt="Card image cap">
+                <div class="card-body pokeFont pokeText">
+                    Partially Correct
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="card">
+                <img class="card-img-top clueSize" src="~/resources/redblock.png" alt="Card image cap">
+                <div class="card-body pokeFont pokeText">
+                    Incorrect
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="card">
+                <img class="card-img-top clueSize" src="~/resources/white-up-arrow-png-2.png" alt="Card image cap">
+                <div class="card-body pokeFont pokeText">
+                    Answer is greater than
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="card">
+                <img class="card-img-top clueSize" src="~/resources/white-down-arrow-png-2.png" alt="Card image cap">
+                <div class="card-body pokeFont pokeText">
+                    Answer is less than
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.IsSuccess)
+    {
+        <br/>
+     <div class="row">
+        <div class="col-sm-5">
+            <div class="card">
+                <div style="color:black">
+                    You guessed the @(@Model.IsRandomMode ? "Random Pokemon" : "Pokemon of the day") in @Model.PokemonGuesses.Guesses.Count @(Model.PokemonGuesses.Guesses.Count == 1 ? "try" : "tries")!
+                </div>
+            <br/>
+                <button id="copyButton" class="btn btn-primary">Copy</button>
+                <input type="hidden" id="guessCount" value="@Model.PokemonGuesses.Guesses.Count" />
+            </div>
+        </div>
+    </div>
+    }
+    
+<input type="hidden" id="randomSeed" value="@Model.RandomSeed" />
+<input type="hidden" id="baseUrl" value="@Model.BaseUrl" />

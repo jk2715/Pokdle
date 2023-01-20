@@ -1,0 +1,71 @@
+﻿@using PokeApiNet
+@model Pokdle.Models.ComponentModels.PokemonGuessComponentModel
+@{
+}
+
+@for (int i = Model.Guesses.Count - 1; i >= 0; i--)
+{
+     <tr class="cardSize" id="cardSprite-@Model.PokemonInfo[i].Pokemon.Id">
+      <td>
+                <img class="card-img artwork-sm" src="@Model.PokemonInfo[i].Pokemon.Sprites.Other.OfficialArtwork.FrontDefault" alt="Card image cap">
+      </td>
+      <td class="cellCard @(Model.Guesses[i].Type == 1 ? "greencard" : Model.Guesses[i].Type == 0 ? "yellowcard" : "redcard")" id="cardType-@Model.PokemonInfo[i].Pokemon.Id">       
+        <!--  <img src="~/resources/pokeball opening.gif" style="width:100%;height:100%;padding:0em;display:block;"> -->
+          @foreach (var type in @Model.PokemonInfo[i].TypeNames)
+                    {
+                        @type
+                        <br/>     
+                    }
+      </td>
+      <td class="cellCard @(Model.Guesses[i].Abilities == 1 ? "greencard" : Model.Guesses[i].Abilities == 0 ? "yellowcard" : "redcard")" id="cardAbilities-@Model.PokemonInfo[i].Pokemon.Id">
+                        @foreach(var ability in @Model.PokemonInfo[i].AbilityNames)
+                        {
+                            @ability
+                            <br/>
+                        } 
+      </td>
+      <td class="cellCard @(Model.Guesses[i].Top2BaseStats == 1 ? "greencard" : Model.Guesses[i].Top2BaseStats == 0 ? "yellowcard" : "redcard")" id="cardTopBaseStats-@Model.PokemonInfo[i].Pokemon.Id" >
+                        @foreach(var baseStats in @Model.PokemonInfo[i].TopBaseStats)
+                        {
+                            @baseStats
+                            <br/>
+                        } 
+      </td>
+      <td class="cellCard @(Model.Guesses[i].Bottom2BaseStats == 1 ? "greencard" : Model.Guesses[i].Bottom2BaseStats == 0 ? "yellowcard" : "redcard")" id="cardBotBaseStats-@Model.PokemonInfo[i].Pokemon.Id" >
+                        @foreach(var baseStats in @Model.PokemonInfo[i].BottomBaseStats)
+                        {
+                            @baseStats
+                            <br/>
+                        } 
+      </td>
+      <td class="cellCard @(Model.Guesses[i].EvolutionStage == 1 ? "greencard" : "redcard")" id="cardEvolutionStage-@Model.PokemonInfo[i].Pokemon.Id">
+          @if(Model.Guesses[i].EvolutionStage != 1)
+                        {
+                            <div>
+                                <img class="arrow" src="~/resources/white-@(Model.Guesses[i].EvolutionStage == 0 ? "up" : "down")-arrow-png-2.png">
+                            </div>
+                            
+                        }     
+                        <div>@Model.PokemonInfo[i].EvolutionStage</div> 
+      </td>
+      <td class="cellCard @(Model.Guesses[i].EvolutionCount == 1 ? "greencard" : "redcard")" id="cardEvolutionCount-@Model.PokemonInfo[i].Pokemon.Id">
+            @if(Model.Guesses[i].EvolutionCount != 1)
+                        {
+                            <div>
+                                <img class="arrow" src="~/resources/white-@(Model.Guesses[i].EvolutionCount == 0 ? "up" : "down")-arrow-png-2.png">
+                            </div>  
+                        }     
+                        <div>@Model.PokemonInfo[i].EvolutionCount</div>
+      </td>
+      <td class="cellCard @(Model.Guesses[i].Gen == 1 ? "greencard" : "redcard")" id="cardGeneration-@Model.PokemonInfo[i].Pokemon.Id">
+          @if(Model.Guesses[i].Gen != 1)
+                        {
+                            <div>
+                                <img class="arrow" src="~/resources/white-@(Model.Guesses[i].Gen == 0 ? "up" : "down")-arrow-png-2.png">
+                            </div>                    
+                        }     
+                        <div>@Model.PokemonInfo[i].Generation</div> 
+      </td>
+    </tr>
+}
+<input type="hidden" id="isSuccess" value="@(Model.Success ? "1" : "0")" />
