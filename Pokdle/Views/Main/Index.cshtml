@@ -1,15 +1,13 @@
 ﻿@using PokeAPI
 @model Pokdle.Models.PageModels.MainPageModel
-@{
-    List<string> generations = new List<string>()
-    {
-        "All", "I", "II", "III", "IV", "V", "VI", "VII", "VIII"
-    };
-}
     <div class="text-center card mainCard">
         <h1 class="display-4 pokeFont mainTitle">Pokdle</h1>
         <br />
         <h6 class="pokeFont pokeText">Another Pokemon Wordle Clone</h6>
+        @if(Model.IsRandomMode)
+        {
+        <h6 class="pokeFont pokeText">Random Mode</h6>
+        }
     <br />
     @if (!Model.IsSuccess)
     {
@@ -35,7 +33,7 @@
                         All
                     </button>
                     <ul class="dropdown-menu dropdown-menu-light" id="GenSelectDropdown" aria-labelledby="GenSelectDropdownButton">
-                        @foreach(string gen in generations)
+                        @foreach(string gen in Model.GenerationsList)
                         {
                             <li><a class="dropdown-item" style="text-align:center" id="generation-@gen" href="#" onclick="SetGeneration('@gen')">@gen</a></li>
                         }
@@ -57,8 +55,8 @@
   
    }
    <br/>
-   <form action="Home/@(!Model.IsRandomMode ? "RandomMode": "DailyMode")" method="Get">
-       <button type="submit" class="btn btn-warning" id="changeMode">@(!Model.IsRandomMode ? "Try a Random Pokemon" : "Pokemon of the Day")</button>
+   <form action="Main/@(!Model.IsRandomMode ? "RandomMode": "DailyMode")" method="Get">
+       <button type="submit" class="btn btn-warning" id="changeMode">@(!Model.IsRandomMode ? "Go to Random Mode" : "Pokemon of the Day")</button>
    </form>
 <br />
 </div>
@@ -175,6 +173,13 @@
             <br/>
                 <button id="copyButton" class="btn btn-primary">Copy</button>
                 <input type="hidden" id="guessCount" value="@Model.PokemonGuesses.Guesses.Count" />
+                @if (Model.IsRandomMode)
+                {
+                    <br/>
+                    <form action="Main/RandomMode" method="Get">
+                        <button type="submit" class="btn btn-warning" id="changeMode">Try Another Random Pokemon</button>
+                    </form>
+                }                
             </div>
         </div>
     </div>

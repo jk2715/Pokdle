@@ -11,6 +11,7 @@ namespace Pokdle.Models.PageModels
         public bool IsRandomMode { get; set; }
         public int RandomSeed { get; set; }
         public string BaseUrl { get; set; }
+        public List<string> GenerationsList { get; set; }
         public MainPageModel()
         {
             PokemonResults = new PokemonSearchComponentModel(new List<PokeApiNet.Pokemon>());

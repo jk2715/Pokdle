@@ -47,10 +47,13 @@ namespace Pokdle.Infrastructure
                     idsToInclude.AddRange(Enumerable.Range(722, 88).ToList());
                     break;
                 case "VIII":
-                    idsToInclude.AddRange(Enumerable.Range(810, 89).ToList());
+                    idsToInclude.AddRange(Enumerable.Range(810, 96).ToList());
+                    break;
+                case "IX":
+                    idsToInclude.AddRange(Enumerable.Range(906, 112).ToList());
                     break;
                 default:
-                    idsToInclude.AddRange(Enumerable.Range(1, 898).ToList());
+                    idsToInclude.AddRange(Enumerable.Range(1, 1017).ToList());
                     break;
             }
             return idsToInclude;

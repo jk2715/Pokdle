@@ -42,6 +42,7 @@ namespace Pokdle.Controllers
             model.PokemonName = _pokemonOfTheDay.Pokemon.Name.ToLowerInvariant();
             model.PokemonGuesses = new PokemonGuessComponentModel(pokemonGuessesInfoList, guesses);
             model.PokemonResults = new PokemonSearchComponentModel(_pokemonList);
+            model.GenerationsList = _configuration.GetSection("GenerationsList").Get<List<string>>();
             return View(model);
         }
 
