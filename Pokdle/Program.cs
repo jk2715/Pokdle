@@ -1,8 +1,13 @@
+using Pokdle.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
+
+var pokemonRepo = new PokemonRepository(builder.Configuration);
+var listOfPokemon = pokemonRepo.GetAllPokemon().GetAwaiter().GetResult();
 
 builder.Services.AddSession(options =>
 {
@@ -10,8 +15,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddSingleton(pokemonRepo);
+builder.Services.AddSingleton(listOfPokemon);
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

@@ -17,12 +17,12 @@ namespace Pokdle.Controllers
         private PokemonInfo _pokemonOfTheDay;
         private static List<Pokemon> _pokemonList;
         private readonly IConfiguration _configuration;
-        public MainController(IConfiguration configuration)
+        public MainController(IConfiguration configuration, PokemonRepository pokemonRepo, List<Pokemon> listOfPokemon)
         {
-            _pokemonRepository = _pokemonRepository != null ? _pokemonRepository : new PokemonRepository(configuration);
+            _pokemonRepository = pokemonRepo;
             _configuration = configuration;
             _pokemonOfTheDay = GetCurrentPokemon();
-            _pokemonList = _pokemonList ?? _pokemonRepository.GetAllPokemon().GetAwaiter().GetResult();
+            _pokemonList = _pokemonList ?? listOfPokemon;
         }
 
         public async Task<IActionResult> Index(bool isRandom = false, int seed = 0)
